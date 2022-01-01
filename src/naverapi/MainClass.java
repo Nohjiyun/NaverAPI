@@ -1,9 +1,6 @@
 package naverapi;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import java.util.ArrayList;
 import dto.NaverApiDTO;
 
 //네이버 검색 API 예제 - blog 검색
@@ -26,18 +23,14 @@ public class MainClass {
      NaverAPI nv = new NaverAPI();
      String responseBody = nv.searchBlog("코로나");
      System.out.println(responseBody);
-
-     //json 파싱
-     Gson gson = new Gson();
-     JsonObject jsonObject = new Gson().fromJson(responseBody, JsonObject.class);
-     JsonArray jsonArray = jsonObject.getAsJsonArray("items");
-     System.out.println(jsonArray.get(0));
-     
-     for(JsonElement em : jsonArray) {
-	     NaverApiDTO dto = gson.fromJson(em, NaverApiDTO.class);
-	     System.out.println(dto.getTitle());
-	     System.out.println(dto.getLink());
-	     System.out.println(dto.getpostdate());
+     ArrayList<NaverApiDTO> list = nv.getListJson(responseBody);
+     for(NaverApiDTO d: list) {
+    	 System.out.print("제목: ");
+    	 System.out.println(d.getTitle());
+    	 System.out.print("링크: ");
+    	 System.out.println(d.getLink());
+    	 System.out.print("게시일: ");
+    	 System.out.println(d.getpostdate());
      }
  }
 }

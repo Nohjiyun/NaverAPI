@@ -5,9 +5,17 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.hsj.util.*;
+
+import dto.NaverApiDTO;
 import naverapi.NaverAPI;
 
 
@@ -39,6 +47,26 @@ public class NaverAPI {
         return responseBody;
     }
 
+    public ArrayList<NaverApiDTO> getListJson(String responseBody) {
+    	//json 파싱
+        Gson gson = new Gson();
+        ArrayList<NaverApiDTO> list = new ArrayList<NaverApiDTO>();
+        JsonObject jsonObject = new Gson().fromJson(responseBody, JsonObject.class);
+        JsonArray jsonArray = jsonObject.getAsJsonArray("items");
+//        System.out.println(jsonArray.get(0));
+        
+        for(JsonElement em : jsonArray) {
+   	     NaverApiDTO dto = gson.fromJson(em, NaverApiDTO.class);
+   	     list.add(dto);
+//   	     System.out.println(dto.getTitle());
+//   	     System.out.println(dto.getLink());
+//   	     System.out.println(dto.getpostdate());
+        }
+        return list;
+    }
+    
+    
+    
     public static String get(String apiUrl, Map<String, String> requestHeaders){
         HttpURLConnection con = connect(apiUrl);
         try {
